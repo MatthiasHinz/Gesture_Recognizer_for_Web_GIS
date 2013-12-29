@@ -1,9 +1,11 @@
 #include "MouseControl.h"
 #include "NiteSampleUtilities.h"
+#include <math.h>
 
 //isMouseControledV - different from isMouseControled() to prevent errors
 bool isMouseControledV;
 bool initStartValue=false;
+
 
 MouseControl::MouseControl(void)
 {
@@ -23,11 +25,11 @@ bool MouseControl::startMouseControl(void)
 			isMouseControledV = true;
 
 	//put cursor in the middle of the screen: SPI_GETWORKAREA
-	int screenX = GetSystemMetrics(SM_CXSCREEN);
-	int screenY = GetSystemMetrics(SM_CYSCREEN);
+		int screenX = GetSystemMetrics(SM_CXFULLSCREEN);
+		int screenY = GetSystemMetrics(SM_CYFULLSCREEN);
 	SetCursorPos(screenX / 2, screenY / 2);
-	xcursorpos = 500;
-	ycursorpos = 500;
+	//xcursorpos = 500;
+	///ycursorpos = 500;
 	initStartValue=true;
 	return true;
 }
@@ -52,12 +54,24 @@ bool MouseControl::updateMouseControl(float xnew, float ynew)
 		return true;
 	}
 
-	float xposnew, yposnew;
+	float dx, dy;
+	float scale = 3; //scale factor to increase / decrease sensitivity and movement radius
+	dx =scale*(xnew-xold); 
+	dy =scale*(ynew-yold); 
+
+	POINT pos;// = LPPOINT();
+	GetCursorPos(&pos);
+	SetCursorPos(pos.x + floor(dx), pos.y - floor(dy));
+	//SetCursorPos();
+
+
+		
+	//	, yposnew;
 	//move right: coordinates become larger
 	//move left: coordinates become smaller, perhaps smaller then 0
 	//move down: coordinates become smaller, perhaps smaller then 0
 	//move up: coordinates become larger
-			
+	/*		
 	//detect movement
 	if ((xnew > xold) && (ynew<yold))		//move right and down (really down???)
 	{
@@ -133,7 +147,7 @@ bool MouseControl::updateMouseControl(float xnew, float ynew)
 			}//end else3
 		}//end else
 	}//end else1
-
+	*/
 	xold = xnew;
 	yold = ynew;
 	

@@ -49,6 +49,7 @@ int Nite_HandTracker::initHandTracker(void)
 		return 3;
 	}
 	
+	handTracker.setSmoothingFactor(0.2);
 	handTracker.startGestureDetection(nite::GESTURE_WAVE);
 	handTracker.startGestureDetection(nite::GESTURE_HAND_RAISE);
 	handTracker.startGestureDetection(nite::GESTURE_CLICK);
@@ -133,7 +134,27 @@ void Nite_HandTracker::updateHandTracker(void)
 			if (gestures[i].isComplete() ){
 				if(gestures[i].getType()==nite::GESTURE_CLICK)
 				{
-					printf("\nGESTURE CLICK\n" );
+					printf("\nGESTURE CLICK" );
+					INPUT input = {0};
+					//ZeroMemory(&input, sizeof(input));
+					input.type = INPUT_MOUSE;
+					input.mi.dwFlags = MOUSEEVENTF_WHEEL | MOUSEEVENTF_VIRTUALDESK;
+					if(GetKeyState(VK_LBUTTON) == 0){
+						input.mi.mouseData = 2;
+						printf(" (Mousewheel +2 / Zoom in)");
+					}else{
+						input.mi.mouseData = -2;
+						printf(" (Mousewheel -2 / Zoom out)");
+					} 
+
+					int returnCode=SendInput(1, &input, sizeof(input));
+
+														
+							/*
+							ZeroMemory(&input, sizeof(input));
+							input.type = INPUT_MOUSE;
+							input.mi.dwFlags = MOUSEEVENTF_WHEEL | MOUSEEVENTF_VIRTUALDESK;
+						    returnCode=SendInput(1, &input, sizeof(input));*/
 				}
 
 				/*if(gestures[i].getType()==nite::GESTURE_HAND_RAISE)
