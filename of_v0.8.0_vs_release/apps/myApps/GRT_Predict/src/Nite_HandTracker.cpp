@@ -135,6 +135,7 @@ void Nite_HandTracker::updateHandTracker(void)
 				if(gestures[i].getType()==nite::GESTURE_CLICK)
 				{
 					printf("\nGESTURE CLICK" );
+
 					INPUT input = {0};
 					//ZeroMemory(&input, sizeof(input));
 					input.type = INPUT_MOUSE;

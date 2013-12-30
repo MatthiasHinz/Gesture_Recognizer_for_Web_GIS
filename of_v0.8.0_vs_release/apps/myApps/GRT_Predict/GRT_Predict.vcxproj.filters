@@ -229,30 +229,14 @@
     <ClCompile Include="GRT\Util\WarningLog.cpp">
       <Filter>GRT</Filter>
     </ClCompile>
-    <ClCompile Include="src\GrabProxie.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GRT_Recognizer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MouseControl.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nite_HandTracker.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\openniProxie.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Static_Recognizer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\testApp.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
+    <ClCompile Include="src\GrabProxie.cpp" />
+    <ClCompile Include="src\GRT_Recognizer.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MouseControl.cpp" />
+    <ClCompile Include="src\Nite_HandTracker.cpp" />
+    <ClCompile Include="src\openniProxie.cpp" />
+    <ClCompile Include="src\Static_Recognizer.cpp" />
+    <ClCompile Include="src\testApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -560,30 +544,14 @@
     <ClInclude Include="GRT\Util\WarningLog.h">
       <Filter>GRT</Filter>
     </ClInclude>
-    <ClInclude Include="src\GrabProxie.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GRT_Recognizer.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MouseControl.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nite_HandTracker.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\NiteSampleUtilities.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\openniProxie.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Static_Recognizer.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\testApp.h">
-      <Filter>src</Filter>
-    </ClInclude>
+    <ClInclude Include="src\GrabProxie.h" />
+    <ClInclude Include="src\GRT_Recognizer.h" />
+    <ClInclude Include="src\MouseControl.h" />
+    <ClInclude Include="src\Nite_HandTracker.h" />
+    <ClInclude Include="src\NiteSampleUtilities.h" />
+    <ClInclude Include="src\openniProxie.h" />
+    <ClInclude Include="src\Static_Recognizer.h" />
+    <ClInclude Include="src\testApp.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />

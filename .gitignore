@@ -10,7 +10,7 @@
 *.sln.docstates
 
 
-
+[Ee]xamples/
 
 #NUNIT
 *.VisualState.xml
