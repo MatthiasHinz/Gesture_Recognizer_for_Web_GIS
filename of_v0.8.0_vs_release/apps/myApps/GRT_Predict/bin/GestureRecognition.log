@@ -1,0 +1,101 @@
+﻿Der Buildvorgang wurde am 02.12.2013 17:19:59 gestartet.
+     1>Projekt "C:\Users\Matthias\Documents\000 - uni\a - IWGI\IWGI_workspace\GestureRecognition-GRT\GestureRecognition.vcxproj" auf Knoten "2", Build Ziel(e).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\Program Files (x86)\OpenNI2\Include\\" /I. /I"C:\Program Files (x86)\PrimeSense\NiTE2\Include\\" /ZI /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>c:\users\matthias\documents\000 - uni\a - iwgi\iwgi_workspace\gesturerecognition-grt\grt\featureextractionmodules\kmeansquantizer\kmeansquantizer.h(222): warning C4244: 'return': Konvertierung von 'double' in 'UINT', möglicher Datenverlust
+     1>c:\users\matthias\documents\000 - uni\a - iwgi\iwgi_workspace\gesturerecognition-grt\main.cpp(242): warning C4244: 'Argument': Konvertierung von 'float' in 'int', möglicher Datenverlust
+     1>c:\users\matthias\documents\000 - uni\a - iwgi\iwgi_workspace\gesturerecognition-grt\main.cpp(268): warning C4244: 'Argument': Konvertierung von 'float' in 'int', möglicher Datenverlust
+     1>c:\users\matthias\documents\000 - uni\a - iwgi\iwgi_workspace\gesturerecognition-grt\main.cpp(278): warning C4244: 'Argument': Konvertierung von 'float' in 'int', möglicher Datenverlust
+     1>c:\users\matthias\documents\000 - uni\a - iwgi\iwgi_workspace\gesturerecognition-grt\main.cpp(298): warning C4244: 'Argument': Konvertierung von 'float' in 'int', möglicher Datenverlust
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Matthias\Documents\000 - uni\a - IWGI\IWGI_workspace\GestureRecognition-GRT\Debug\GestureRecognition.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Matthias\Documents\000 - uni\a - IWGI\IWGI_workspace\GestureRecognition-GRT\Debug\\" /LIBPATH:"C:\Program Files (x86)\PrimeSense\NiTE2\Lib\\" /LIBPATH:"C:\Program Files (x86)\OpenNI2\Lib\\" NiTE2.lib OpenNI2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Matthias\Documents\000 - uni\a - IWGI\IWGI_workspace\GestureRecognition-GRT\Debug\GestureRecognition.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Matthias\Documents\000 - uni\a - IWGI\IWGI_workspace\GestureRecognition-GRT\Debug\GestureRecognition.lib" /MACHINE:X86 Debug\AdaBoost.obj
+         Debug\DecisionStump.obj
+         Debug\RadialBasisFunction.obj
+         Debug\WeakClassifier.obj
+         Debug\ANBC.obj
+         Debug\ANBC_Model.obj
+         Debug\BAG.obj
+         Debug\DTW.obj
+         Debug\GMM.obj
+         Debug\HiddenMarkovModel.obj
+         Debug\HMM.obj
+         Debug\KNN.obj
+         Debug\LDA.obj
+         Debug\MinDist.obj
+         Debug\MinDistModel.obj
+         Debug\Softmax.obj
+         Debug\libsvm.obj
+         Debug\SVM.obj
+         Debug\GaussianMixtureModels.obj
+         Debug\KMeans.obj
+         Debug\Gate.obj
+         Debug\LabelledClassificationData.obj
+         Debug\LabelledClassificationSample.obj
+         Debug\LabelledContinuousTimeSeriesClassificationData.obj
+         Debug\LabelledRegressionData.obj
+         Debug\LabelledRegressionSample.obj
+         Debug\LabelledTimeSeriesClassificationData.obj
+         Debug\LabelledTimeSeriesClassificationSample.obj
+         Debug\UnlabelledClassificationData.obj
+         Debug\FastFourierTransform.obj
+         Debug\FFT.obj
+         Debug\FFTFeatures.obj
+         Debug\KMeansQuantizer.obj
+         Debug\MovementIndex.obj
+         Debug\MovementTrajectoryFeatures.obj
+         Debug\PrincipalComponentAnalysis.obj
+         Debug\PeakDetection.obj
+         Debug\TimeDomainFeatures.obj
+         Debug\TimeseriesBuffer.obj
+         Debug\ZeroCrossingCounter.obj
+         Debug\Classifier.obj
+         Debug\Context.obj
+         Debug\FeatureExtraction.obj
+         Debug\GestureRecognitionPipeline.obj
+         Debug\GRTBase.obj
+         Debug\PostProcessing.obj
+         Debug\PreProcessing.obj
+         Debug\Regressifier.obj
+         Debug\ClassLabelChangeFilter.obj
+         Debug\ClassLabelFilter.obj
+         Debug\ClassLabelTimeoutFilter.obj
+         Debug\DeadZone.obj
+         Debug\Derivative.obj
+         Debug\DoubleMovingAverageFilter.obj
+         Debug\HighPassFilter.obj
+         Debug\LowPassFilter.obj
+         Debug\MovingAverageFilter.obj
+         Debug\SavitzkyGolayFilter.obj
+         Debug\MLP.obj
+         Debug\Neuron.obj
+         Debug\LinearRegression.obj
+         Debug\LogisticRegression.obj
+         Debug\Cholesky.obj
+         Debug\DebugLog.obj
+         Debug\EigenvalueDecomposition.obj
+         Debug\ErrorLog.obj
+         Debug\LabelledTimeSeriesClassificationSampleTrimmer.obj
+         Debug\LUDecomposition.obj
+         Debug\MatrixDouble.obj
+         Debug\RangeTracker.obj
+         Debug\SVD.obj
+         Debug\TestingLog.obj
+         Debug\TrainingDataRecordingTimer.obj
+         Debug\TrainingLog.obj
+         Debug\Util.obj
+         Debug\WarningLog.obj
+         Debug\main.obj
+         GestureRecognition.vcxproj -> C:\Users\Matthias\Documents\000 - uni\a - IWGI\IWGI_workspace\GestureRecognition-GRT\Debug\GestureRecognition.exe
+       PostBuildEvent:
+         xcopy /D /S /F /Y "C:\Program Files (x86)\OpenNI2\Redist\\*" "C:\Users\Matthias\Documents\000 - uni\a - IWGI\IWGI_workspace\GestureRecognition-GRT\Debug\"
+         xcopy /D /S /F /Y "C:\Program Files (x86)\PrimeSense\NiTE2\Redist\\*" "C:\Users\Matthias\Documents\000 - uni\a - IWGI\IWGI_workspace\GestureRecognition-GRT\Debug\"
+         
+         :VCEnd
+         0 Datei(en) kopiert
+         0 Datei(en) kopiert
+     1>Die Erstellung des Projekts "C:\Users\Matthias\Documents\000 - uni\a - IWGI\IWGI_workspace\GestureRecognition-GRT\GestureRecognition.vcxproj" ist abgeschlossen, Build Ziel(e).
+
+Build erfolgreich.
+
+Verstrichene Zeit 00:00:02.99
