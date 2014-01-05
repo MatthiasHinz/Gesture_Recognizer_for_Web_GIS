@@ -136,16 +136,34 @@ void Nite_HandTracker::updateHandTracker(void)
 				{
 					printf("\nGESTURE CLICK" );
 
+					/*
 					INPUT input = {0};
 					//ZeroMemory(&input, sizeof(input));
 					input.type = INPUT_MOUSE;
 					input.mi.dwFlags = MOUSEEVENTF_WHEEL | MOUSEEVENTF_VIRTUALDESK;
-					if(GetKeyState(VK_LBUTTON) == 0){
-						input.mi.mouseData = 2;
-						printf(" (Mousewheel +2 / Zoom in)");
+					if(GetKeyState(VK_LBUTTON) >= 0){
+						input.mi.mouseData = 5;
+						printf(" (Mousewheel +5 / Zoom in), Left button state: %i\n",GetKeyState(VK_LBUTTON));
 					}else{
-						input.mi.mouseData = -2;
-						printf(" (Mousewheel -2 / Zoom out)");
+						input.mi.mouseData = -5;
+						printf(" (Mousewheel -5 / Zoom out), Left button state: %i\n",GetKeyState(VK_LBUTTON));
+					} 
+
+					int returnCode=SendInput(1, &input, sizeof(input));
+					*/
+
+
+
+					INPUT input = {0};
+					//ZeroMemory(&input, sizeof(input));
+					input.type = INPUT_KEYBOARD;
+					
+					if(GetKeyState(VK_LBUTTON) >= 0){
+						input.ki.wVk = VK_OEM_PLUS;
+						printf(" (\"+\"-Key pressed / Zoom in), Left button state: %i\n",GetKeyState(VK_LBUTTON));
+					}else{
+						input.ki.wVk = VK_OEM_MINUS;
+						printf(" (\"-\"-Key pressed / Zoom out), Left button state: %i\n",GetKeyState(VK_LBUTTON));
 					} 
 
 					int returnCode=SendInput(1, &input, sizeof(input));
