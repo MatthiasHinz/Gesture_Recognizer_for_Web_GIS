@@ -4,7 +4,7 @@
 //-----------------
 //activate or deactivate components from here:
 bool useMouseControl = true;
-bool useOneHandRecognizer = false;
+bool useOneHandRecognizer = true;
 bool useTwoHandRegognizer = false;
 bool useGrabDetector = true;
 int numberOfTrackedHands = 1; //<- TODO: give this number a meaning...

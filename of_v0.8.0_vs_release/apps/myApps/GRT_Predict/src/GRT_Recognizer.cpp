@@ -55,7 +55,7 @@ bool GRT_Recognizer::initPipeline(string trainingdatafile, int dimension)
 	myFilter.setBufferSize(6);
 	myFilter.setBufferSize(2);*/
 
-	pipeline.addPostProcessingModule(ClassLabelChangeFilter());
+	pipeline.addPostProcessingModule(ClassLabelTimeoutFilter(1000, ClassLabelTimeoutFilter::ALL_CLASS_LABELS));
 	pipeline.train(trainingData);
 
 	return true;
@@ -86,12 +86,52 @@ GRT::GestureRecognitionPipeline &getPipeline(){
 
 string GRT_Recognizer::oneHandedLabelMapping(int label){
 					switch(label){
-				case 1:
-					return "A";
-				case 2:
+				case 1:{
+					return "A";}
+				case 2:{
+					INPUT input = {0};
+					input.type = INPUT_KEYBOARD;
+					input.ki.wVk = VK_CONTROL;
+					input.ki.dwFlags = 0; // key press
+					//printf(" (\"+\"-Key pressed / Zoom in), Left button state: %i\n",GetKeyState(VK_LBUTTON));
+					int returnCode=SendInput(1, &input, sizeof(input));
+
+					input.ki.wVk = 0x51; //key code for Q
+					//printf(" (\"+\"-Key pressed / Zoom in), Left button state: %i\n",GetKeyState(VK_LBUTTON));
+					returnCode=SendInput(1, &input, sizeof(input));
+
+					input.ki.dwFlags = KEYEVENTF_KEYUP;
+					//printf(" (\"+\"-Key pressed / Zoom in), Left button state: %i\n",GetKeyState(VK_LBUTTON));
+					returnCode=SendInput(1, &input, sizeof(input));
+
+					input.ki.wVk = VK_CONTROL;
+					//printf(" (\"+\"-Key pressed / Zoom in), Left button state: %i\n",GetKeyState(VK_LBUTTON));
+					returnCode=SendInput(1, &input, sizeof(input));
+
 					return "X";
-				case 3:
+					   }
+				case 3:{
+					INPUT input = {0};
+					input.type = INPUT_KEYBOARD;
+					input.ki.wVk = VK_CONTROL;
+					input.ki.dwFlags = 0; // key press
+					//printf(" (\"+\"-Key pressed / Zoom in), Left button state: %i\n",GetKeyState(VK_LBUTTON));
+					int returnCode=SendInput(1, &input, sizeof(input));
+
+					input.ki.wVk = 0x53; // key code for S
+					//printf(" (\"+\"-Key pressed / Zoom in), Left button state: %i\n",GetKeyState(VK_LBUTTON));
+					returnCode=SendInput(1, &input, sizeof(input));
+					
+					input.ki.dwFlags = KEYEVENTF_KEYUP;
+					//printf(" (\"+\"-Key pressed / Zoom in), Left button state: %i\n",GetKeyState(VK_LBUTTON));
+					returnCode=SendInput(1, &input, sizeof(input));
+
+					input.ki.wVk = VK_CONTROL;
+					//printf(" (\"+\"-Key pressed / Zoom in), Left button state: %i\n",GetKeyState(VK_LBUTTON));
+					returnCode=SendInput(1, &input, sizeof(input));
+
 					return "S";
+					   }
 				/*case 4:
 					return "PAN LEFT";
 				case 5:
