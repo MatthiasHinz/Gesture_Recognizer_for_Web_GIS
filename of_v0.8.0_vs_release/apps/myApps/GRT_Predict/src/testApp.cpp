@@ -4,7 +4,7 @@
 //-----------------
 //activate or deactivate components from here:
 bool useMouseControl = true;
-bool useOneHandRecognizer = true;
+bool useOneHandRecognizer = false;
 bool useTwoHandRegognizer = false;
 bool useGrabDetector = true;
 int numberOfTrackedHands = 1; //<- TODO: give this number a meaning...
@@ -23,8 +23,10 @@ openniProxie openniP;
 void testApp::setup(){
 	ofSetFrameRate(60);
 
+	//string train[] = {"zoom_in_out_base.txt"};
 	if(useTwoHandRegognizer)
-		recognizer.initPipeline("TrainingData_v3_zoomIn_ZoomOut.txt", 6);
+		//recognizer.initPipeline("TrainingData_v3_zoomIn_ZoomOut.txt", 6);
+			recognizer.initPipeline("zoom_in_out_base.txt", 6);
 	if(useOneHandRecognizer)
 		oneHandrecognizer.initPipeline("TrainingData_A_X_S.txt", 3);
 	

@@ -37,7 +37,7 @@ bool GRT_Recognizer::initPipeline(string trainingdatafile, int dimension)
     //Set the null rejection coefficient to 3, this controls the thresholds for the automatic null rejection
     //You can increase this value if you find that your real-time gestures are not being recognized
     //If you are getting too many false positives then you should decrease this value
-    dtw.setNullRejectionCoeff(2);
+    dtw.setNullRejectionCoeff(1);
 
     
     //Turn on the automatic data triming, this will remove any sections of none movement from the start and end of the training samples
@@ -45,7 +45,7 @@ bool GRT_Recognizer::initPipeline(string trainingdatafile, int dimension)
     
     //Offset the timeseries data by the first sample, this makes your gestures (more) invariant to the location the gesture is performed
     dtw.setOffsetTimeseriesUsingFirstSample(true);
-  
+	dtw.enableZNormalization(true);
 
     //Add the classifier to the pipeline (after we do this, we don't need the DTW classifier anymore)
     pipeline.setClassifier( dtw );
@@ -156,9 +156,9 @@ string GRT_Recognizer::twoHandedLabelMapping(int label){
 					return "ZOOM IN";
 				case 2:
 					return "ZOOM OUT";
-				/*case 3:
-					return "ZOOM OUT";
-				case 4:
+				case 3:
+					return "BASELAYER";
+				/*case 4:
 					return "PAN LEFT";
 				case 5:
 					return "PAN RIGHT";

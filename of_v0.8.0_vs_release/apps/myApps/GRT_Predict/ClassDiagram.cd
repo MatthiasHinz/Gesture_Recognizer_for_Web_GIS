@@ -1,10 +1,59 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="MouseControl">
-    <Position X="2" Y="0.75" Width="3.5" />
+    <Position X="2" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAIACAAAAAAAABEAAAAAAAQAAAAAAAAAAAAABAAAAA=</HashCode>
-      <FileName>MouseControl.h</FileName>
+      <HashCode>AAAIACAAAAAAAABEAAAAAAAQAACAAAAAAAkAABAEAAA=</HashCode>
+      <FileName>src\MouseControl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GrabProxie">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="GrabProxie::GrabEventListener" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\GrabProxie.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAgAAAiAAAAAAAEAAAAAAABAAQAAAAAAAAA=</HashCode>
+      <FileName>src\GrabProxie.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GRT_Recognizer">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAgACAAAIAACEAAEAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\GRT_Recognizer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Nite_HandTracker">
+    <Position X="10.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAACBAAQAAAIAAAAAACAAAAQABAAAA=</HashCode>
+      <FileName>src\Nite_HandTracker.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="openniProxie">
+    <Position X="4.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YAAAAAAAAAAAAIACAAAQBAAAAAAAAAAAAABACAAEQAA=</HashCode>
+      <FileName>src\openniProxie.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Static_Recognizer">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAACAAAAAIAACAAAEAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\Static_Recognizer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="testApp">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECgAAAAAAAAAAAgAAAIAAAAAAgAAAAAAIEAAgCAMAAA=</HashCode>
+      <FileName>src\testApp.h</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

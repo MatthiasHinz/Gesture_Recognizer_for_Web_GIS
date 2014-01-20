@@ -36,7 +36,7 @@ bool Static_Recognizer::initPipeline(string trainingdatafile, int dimension)
     anbc.setNullRejectionCoeff(5);
     pipeline_anbc.setClassifier( anbc );
 
-	pipeline_anbc.addPostProcessingModule(ClassLabelChangeFilter());
+	pipeline_anbc.addPostProcessingModule(ClassLabelTimeoutFilter(1000, ClassLabelTimeoutFilter::ALL_CLASS_LABELS));
 	pipeline_anbc.train(trainingData);
 
 	return true;
