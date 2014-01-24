@@ -14,5 +14,7 @@ public:
 //	bool isLeftHandRecognized(void);
 	bool isRightHandTracked(void);
 	bool isLeftHandTracked(void);
+	void initLeftHand(Point3f position);
+	void initRightHand(Point3f position);
 };
 

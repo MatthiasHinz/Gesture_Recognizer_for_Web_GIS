@@ -1,13 +1,17 @@
 #include "testApp.h"
+#include "fullBodyTracker.h"
+#include "Static_Recognizer.h"
 
 //CONFIGURATION
 //-----------------
 //activate or deactivate components from here:
-bool useMouseControl = true;
-bool useOneHandRecognizer = false;
-bool useTwoHandRegognizer = false;
-bool useGrabDetector = true;
-int numberOfTrackedHands = 1; //<- TODO: give this number a meaning...
+const bool useMouseControl = true;
+const bool useOneHandRecognizer = false;
+const bool useTwoHandRegognizer = false;
+const bool useGrabDetector = true;
+const bool useFullbodyTracker = true;
+const bool useStaticRecognizer = true;
+const int numberOfTrackedHands = 1; //<- TODO: give this number a meaning...
 //TwoHandRecognizer would only work for two hands...
 //-------------------
 
@@ -16,8 +20,12 @@ MouseControl mouseControl;
 GRT_Recognizer recognizer;
 GRT_Recognizer oneHandrecognizer;
 Nite_HandTracker tracker;
-GrabProxie grab;
+GrabProxie grabLeft;
+GrabProxie grabRight;
 openniProxie openniP;
+FullBodyTracker bodyTracker;
+Static_Recognizer static_recognizer;
+
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -29,11 +37,22 @@ void testApp::setup(){
 			recognizer.initPipeline("zoom_in_out_base.txt", 6);
 	if(useOneHandRecognizer)
 		oneHandrecognizer.initPipeline("TrainingData_A_X_S.txt", 3);
-	
+
+
 	openniP.initOpenNi();
 	tracker.initHandTracker();
-	if(useGrabDetector)
-		grab.initGrabDetector(openniP.m_device);
+	if(useFullbodyTracker){
+		bodyTracker.initTracker();
+	}
+	if(useGrabDetector){
+		grabLeft.initGrabDetector(openniP.m_device);
+		grabRight.initGrabDetector(openniP.m_device);
+	}
+
+	if(useStaticRecognizer){
+		static_recognizer.initPipeline("TrainingData_static_zoomin_out.txt" ,6);
+
+	}
 }
 
 //--------------------------------------------------------------
@@ -45,6 +64,19 @@ void testApp::update(){
 	tracker.updateHandTracker();
 	openniP.update();
 
+	if(useFullbodyTracker){
+		bodyTracker.update();
+		if(!tracker.isLeftHandTracked() && bodyTracker.leftHandPositionConfidence > .5){
+			tracker.initLeftHand(bodyTracker.getLeftHandCoordinates());
+		
+		}
+
+		if(!tracker.isRightHandTracked() && bodyTracker.rightHandPositionConfidence > .5){
+			tracker.initRightHand(bodyTracker.getRightHandCoordinates());
+		}
+	
+	}
+
 	if(tracker.isRightHandTracked()){
 		if(useMouseControl && !mouseControl.isMouseControled())
 			mouseControl.startMouseControl();
@@ -53,10 +85,11 @@ void testApp::update(){
 		inputGRT2[0] = inputGRT[0] = xnew = tracker.getRightHandCoordinates().x;
 		inputGRT2[1] = inputGRT[1] = ynew = tracker.getRightHandCoordinates().y;
 		inputGRT2[2] = inputGRT[2] = tracker.getRightHandCoordinates().z;
-		
+		//-------------------------------------------------------------------------
 		if(useMouseControl)
 			mouseControl.updateMouseControl(xnew, ynew);
-		
+
+		//-------------------------------------------------------------------------
 		if(useOneHandRecognizer){
 			GestureRecognitionPipeline &pipeline = oneHandrecognizer.pipeline;
 			pipeline.predict(inputGRT2);
@@ -67,14 +100,24 @@ void testApp::update(){
 					printf("\nGesture: %s\n", message.c_str());
 		}
 
+		//-------------------------------------------------------------------------
+		if(useGrabDetector){
+			bool lost = false; //TODO: this is eventually not such a nice solution... find better ways to detect lost hands
+			bool track = true;
+			
+			grabRight.updateAlgorithm(lost, track, tracker.getRightHandCoordinates(), openniP.m_depthFrame, openniP.m_colorFrame);
+		}
+
+		//-------------------------------------------------------------------------
 		if(tracker.isLeftHandTracked()){
+			//-------------------------------------------------------------------------
 			if(useGrabDetector){
 				bool lost = false; //TODO: this is eventually not such a nice solution... find better ways to detect lost hands
 				bool track = true;
-
-				grab.updateAlgorithm(lost, track, tracker.getLeftHandCoordinates(), openniP.m_depthFrame, openniP.m_colorFrame);
+				
+				grabLeft.updateAlgorithm(lost, track, tracker.getLeftHandCoordinates(), openniP.m_depthFrame, openniP.m_colorFrame);
 			}
-
+			//-------------------------------------------------------------------------
 			if(useTwoHandRegognizer){
 				inputGRT[3] = tracker.getLeftHandCoordinates().x;
 				inputGRT[4] = tracker.getLeftHandCoordinates().y;
@@ -83,10 +126,27 @@ void testApp::update(){
 				GestureRecognitionPipeline &pipeline = recognizer.pipeline;
 				pipeline.predict(inputGRT);
 				string message = recognizer.twoHandedLabelMapping(pipeline.getPredictedClassLabel());
-				double likelyhood= pipeline.getMaximumLikelihood();
-				if(message != "" && likelyhood>0.9)
+				double likelyhood = pipeline.getMaximumLikelihood();
+				if(message != ""){
 					printf("\nGesture: %s\n", message.c_str());
+				}
 			}
+			//-------------------------------------------------------------------------
+			if(useStaticRecognizer && useFullbodyTracker){
+					vector<double> 	leftHand = vector<double> (3);
+        //Get the left hand and right hand joings
+
+
+				Point3f input[2];
+				input[0] = bodyTracker.getTransformedLeftHandCoordinates();
+				input[1] = bodyTracker.getTransformedRightHandCoordinates();
+				string gestureMessage = static_recognizer.findGesture(point3fToVectorDouble(input,2));
+				
+				if(gestureMessage.compare("") !=0){
+					printf("%s\n", gestureMessage.c_str());
+				}
+			}
+			//-------------------------------------------------------------------------
 		}	
 	}else{//if right hand is not tracked (any more...)
 		if(useMouseControl && mouseControl.isMouseControled())
@@ -128,7 +188,7 @@ void testApp::draw(){
 	    text = "------------------- Prediction Info2 -------------------";
     ofDrawBitmapString(text, textX,textY);
     
-	GestureRecognitionPipeline &pipeline2 = oneHandrecognizer.pipeline;
+	GestureRecognitionPipeline &pipeline2 = static_recognizer.getPipeline();
     /*textY += 15;
     text =  pipeline2.getTrained() ? "Model Trained: YES" : "Model Trained: NO";
     ofDrawBitmapString(text, textX,textY);*/
@@ -231,4 +291,20 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
+vector<double> testApp::point3fToVectorDouble(Point3f points[], int nPoints){ 
+	vector<double> out = vector<double>(nPoints*3);
+
+	for (int i = 0; i < nPoints; i++)
+	{
+		out[i*3+0] = points[i].x;
+		out[i*3+1] = points[i].y;
+		out[i*3+2] = points[i].z;
+			
+	}
+
+	//printf("PPPP %f %f %f %f %f %f", out[0], out[1], out[2], out[3], out[4], out[5]);
+	//printf("\n");
+
+	return out;
+}
 

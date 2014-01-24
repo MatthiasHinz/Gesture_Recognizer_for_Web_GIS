@@ -1,7 +1,7 @@
 #include "grabProxie.h"
 #include <Windows.h>
 #include <iostream>
-
+#include "GUIConnector.h"
 
 
 GrabProxie::GrabProxie(void)
@@ -45,35 +45,15 @@ void GrabProxie::processGrabEvent( PSLabs::IGrabEventListener::GrabEventType Typ
 {
 	printf("Got ");
 	if(Type == PSLabs::IGrabEventListener::GRAB_EVENT){
-		printf("Grab");
-		printf(" %i ", GetKeyState(VK_LBUTTON));
-		
-		INPUT input = {0};
-		//ZeroMemory(&input, sizeof(input));
-		input.type = INPUT_MOUSE;
-		input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_VIRTUALDESK;
-		int returnCode=SendInput(1, &input, sizeof(input));
-		printf(" %i ", GetKeyState(VK_LBUTTON));
-		printf("(Left Mouse Key down / start panning)");
-		//ZeroMemory(&input, sizeof(input));
-
-		//printf(" %s; code:%i",GetLastError(), returnCode);
+		printf("Grab ");
+		GUIConnector::pressLeftMouseButton();
 
 	}else if(Type == PSLabs::IGrabEventListener::RELEASE_EVENT){
-		printf("Release");
-				INPUT input2= {0};
-		input2.type = INPUT_MOUSE;
-		input2.mi.dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_VIRTUALDESK;
-		int returnCode=SendInput(1, &input2, sizeof(input2));
-		printf(" %i ||| %i %i", GetKeyState(VK_LBUTTON), WM_KEYDOWN, WM_KEYUP);
-		printf("(Left Mouse Key up / stop panning)");
-		/*INPUT input;
-		input.type = INPUT_MOUSE;
-		input.mi.dwExtraInfo = MOUSEEVENTF_LEFTUP;
-		int returnCode=SendInput(1, &input, sizeof(input));
-		printf(" %s; code:%i",GetLastError(), returnCode);*/
+		printf("Release ");
+		GUIConnector::releaseLeftMouseButton();
 	}else if(Type == PSLabs::IGrabEventListener::NO_EVENT){
 		printf("No Event?!");
+	
 	}
 	printf(" event\n");
 }

@@ -173,9 +173,10 @@
     <ClCompile Include="GRT\Util\TrainingLog.cpp" />
     <ClCompile Include="GRT\Util\Util.cpp" />
     <ClCompile Include="GRT\Util\WarningLog.cpp" />
-    <ClCompile Include="GUIConnector.cpp" />
+    <ClCompile Include="src\fullBodyTracker.cpp" />
     <ClCompile Include="src\GrabProxie.cpp" />
     <ClCompile Include="src\GRT_Recognizer.cpp" />
+    <ClCompile Include="src\GUIConnector.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MouseControl.cpp" />
     <ClCompile Include="src\Nite_HandTracker.cpp" />
@@ -283,9 +284,10 @@
     <ClInclude Include="GRT\Util\TrainingResult.h" />
     <ClInclude Include="GRT\Util\Util.h" />
     <ClInclude Include="GRT\Util\WarningLog.h" />
-    <ClInclude Include="GUIConnector.h" />
+    <ClInclude Include="src\fullBodyTracker.h" />
     <ClInclude Include="src\GrabProxie.h" />
     <ClInclude Include="src\GRT_Recognizer.h" />
+    <ClInclude Include="src\GUIConnector.h" />
     <ClInclude Include="src\MouseControl.h" />
     <ClInclude Include="src\NiteSampleUtilities.h" />
     <ClInclude Include="src\Nite_HandTracker.h" />

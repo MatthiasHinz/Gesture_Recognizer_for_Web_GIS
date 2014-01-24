@@ -14,5 +14,6 @@ public:
 //	GRT::GestureRecognitionPipeline &getPipeline();
 	std::string twoHandedLabelMapping(int label);
 	std::string oneHandedLabelMapping(int label);
+	GestureRecognitionPipeline getPipeline();
 };
 

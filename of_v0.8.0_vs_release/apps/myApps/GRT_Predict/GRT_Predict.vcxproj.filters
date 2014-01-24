@@ -237,7 +237,8 @@
     <ClCompile Include="src\openniProxie.cpp" />
     <ClCompile Include="src\Static_Recognizer.cpp" />
     <ClCompile Include="src\testApp.cpp" />
-    <ClCompile Include="GUIConnector.cpp" />
+    <ClCompile Include="src\fullBodyTracker.cpp" />
+    <ClCompile Include="src\GUIConnector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -553,7 +554,8 @@
     <ClInclude Include="src\openniProxie.h" />
     <ClInclude Include="src\Static_Recognizer.h" />
     <ClInclude Include="src\testApp.h" />
-    <ClInclude Include="GUIConnector.h" />
+    <ClInclude Include="src\fullBodyTracker.h" />
+    <ClInclude Include="src\GUIConnector.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />

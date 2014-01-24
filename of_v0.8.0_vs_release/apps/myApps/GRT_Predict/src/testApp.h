@@ -30,5 +30,8 @@ class testApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+
+		//utility method
+		VectorDouble testApp::point3fToVectorDouble(Point3f points[], int nPoints);
 		
 };

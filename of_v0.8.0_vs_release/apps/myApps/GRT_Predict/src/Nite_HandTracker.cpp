@@ -6,7 +6,7 @@ Point3f leftHand;
 Point3f rightHand;
 
 bool isLeftHandTrackedV, isRightHandTrackedV = false;
-int leftHandInSync, rightHandInSync = 0; //counts how many times a hand is out of sync
+int leftHandOutOfSync, rightHandOutOfSync = 0; //counts how many times a hand is out of sync
 
 nite::HandId leftHandId, rightHandId;
 const double likelyhood_threshold = 0.6;
@@ -18,6 +18,12 @@ nite::HandTrackerFrameRef handTrackerFrame;
 
 bool printInitMessageLeft = true;
 bool printInitMessageRight = true;
+
+//prevents a hand from getting "locked in"
+int lockedInCounter = 0;
+const int maxCount_lockedInCounter = 20;
+Point3f last_left_value;
+Point3f last_right_value;
 
 Nite_HandTracker::Nite_HandTracker(void)
 {
@@ -32,6 +38,14 @@ Nite_HandTracker::~Nite_HandTracker(void)
 
 int Nite_HandTracker::initHandTracker(void)
 {
+	//Signal that there is no right hand tracked yet:
+	BYTE keys [3] = {VK_CONTROL,VK_SHIFT,VK_OEM_COMMA};
+	GUIConnector::sendKeyboardInput(keys, 3);
+	
+	//Signal that there is no left hand tracked yet:
+	BYTE keys2 [3] = {VK_CONTROL,VK_SHIFT,GUIConnector::L};
+	GUIConnector::sendKeyboardInput(keys2,3);
+
 	niteRc = nite::NiTE::initialize();
 	if (niteRc != nite::STATUS_OK)
 	{
@@ -57,8 +71,8 @@ void Nite_HandTracker::updateHandTracker(void)
 {
 	 //================== OPTAIN DATA ========================
 	const nite::Array<nite::HandData>& hands = handTrackerFrame.getHands();
-	leftHandInSync++;
-	rightHandInSync++;
+	leftHandOutOfSync++;
+	rightHandOutOfSync++;
 
 	bool isLeftHandLost = false;
 	bool isRightHandLost = false;
@@ -71,23 +85,45 @@ void Nite_HandTracker::updateHandTracker(void)
 				//printf("%d. (%5.2f, %5.2f, %5.2f)\n", hand.getId(), hand.getPosition().x, hand.getPosition().y, hand.getPosition().z);
 				if(hand.getId() == rightHandId){
 					rightHand = hand.getPosition();
-					rightHandInSync = 0;
+					rightHandOutOfSync = 0;
 					
 				}else
 					if(hand.getId() == leftHandId){
 						leftHand = hand.getPosition();
-						leftHandInSync = 0;
+						leftHandOutOfSync = 0;
 					}
 			}
 
-			if(hand.getId() == rightHandId && hand.isLost()){
-				printf("Your right hand should get lost!!!!\n");
-				isRightHandLost= true;
-					
+			if(hand.getId() == rightHandId){
+				//test if hand got stuck
+				bool gotStuck = false;
+				if(lockedInCounter == maxCount_lockedInCounter){
+					if(getLeftHandCoordinates() == last_left_value){
+						gotStuck = true;
+					}else last_left_value = getLeftHandCoordinates();
+				
+				} //no counting forward or setting 0 because this is done below with the counter
+
+				if(hand.isLost() || !hand.isTracking() || gotStuck){
+					printf("Your right hand may get lost!!!!\n");
+					isRightHandLost= true;
+				}	
 			}
-			if(hand.getId() == leftHandId && hand.isLost()){
-				printf("Your left hand should get lost!!!!\n");
-				isLeftHandLost=true;
+			if(hand.getId() == leftHandId){
+				//test if hand got stuck
+				bool gotStuck = false;
+				if(lockedInCounter == maxCount_lockedInCounter){
+					if(getRightHandCoordinates() == last_right_value){
+						gotStuck = true;
+					}else last_right_value = getRightHandCoordinates();
+
+					lockedInCounter = 0;
+				} else lockedInCounter++;
+
+				if(hand.isLost()|| !hand.isTracking() || gotStuck){
+					printf("Your left hand may get lost!!!!\n");
+					isLeftHandLost=true;
+				}
 			}
 				// indicate that hand is lost
 					//hand.isLost();
@@ -95,22 +131,24 @@ void Nite_HandTracker::updateHandTracker(void)
 				
 		}
 
-		if(isRightHandLost || (rightHandInSync>200 && isRightHandTrackedV)){
-			printf("\nLost track for right hand!\n");
+		if(isRightHandLost){ //&& rightHandOutOfSync>5){
+			handTracker.stopHandTracking(rightHandId);
+			printf("Lost track for right hand!\n");
 			isRightHandTrackedV = false;
 			printInitMessageRight = true;
-			rightHandInSync=0;
+			rightHandOutOfSync=0;
 			//rightHand = Point3f(0,0,0);
 
 			BYTE keys [3] = {VK_CONTROL,VK_SHIFT,VK_OEM_COMMA};
 			GUIConnector::sendKeyboardInput(keys, 3);
 		}
 
-		if(isLeftHandLost || (leftHandInSync>200 && isLeftHandTrackedV)){
-			printf("\nLost track for left hand!\n");
+		if(isLeftHandLost){ //&& leftHandOutOfSync> 5){
+			handTracker.stopHandTracking(leftHandId);
+			printf("Lost track for left hand!\n");
 			isLeftHandTrackedV = false;
 			printInitMessageLeft = true;
-			leftHandInSync=0;
+			leftHandOutOfSync=0;
 
 			BYTE keys [3] = {VK_CONTROL,VK_SHIFT,GUIConnector::L};
 			GUIConnector::sendKeyboardInput(keys,3);
@@ -145,7 +183,18 @@ void Nite_HandTracker::updateHandTracker(void)
 				{
 					printf("\nGESTURE CLICK" );
 
+					//Zoom in // zoom out
 					if(GetKeyState(VK_LBUTTON) >= 0){
+						GUIConnector::clickLeftMouseButton();
+
+					}else{
+						GUIConnector::releaseLeftMouseButton();
+						GUIConnector::clickLeftMouseButton();
+						GUIConnector::clickLeftMouseButton();
+					}
+
+
+					/*if(GetKeyState(VK_LBUTTON) >= 0){
 						BYTE keys[1] = {VK_OEM_PLUS};
 						GUIConnector::sendKeyboardInput(keys,1);
 						printf(" (\"+\"-Key pressed / Zoom in), Left button state: %i\n",GetKeyState(VK_LBUTTON));
@@ -153,7 +202,7 @@ void Nite_HandTracker::updateHandTracker(void)
 						BYTE keys[1] = {VK_OEM_MINUS};
 						GUIConnector::sendKeyboardInput(keys,1);
 						printf(" (\"-\"-Key pressed / Zoom out), Left button state: %i\n",GetKeyState(VK_LBUTTON));
-					} 
+					} */
 
 				}
 
@@ -181,7 +230,7 @@ void Nite_HandTracker::updateHandTracker(void)
 				if(!isRightHandTrackedV) {
 					rightHandId = newId;
 					isRightHandTrackedV=true;
-					rightHandInSync=0;
+					rightHandOutOfSync=0;
 					foundHand = true;
 					printf("Found right hand!");
 					BYTE keys [3] = {VK_CONTROL,VK_SHIFT,VK_F1};
@@ -190,7 +239,7 @@ void Nite_HandTracker::updateHandTracker(void)
 				}else if(!isLeftHandTrackedV){
 					leftHandId = newId;
 					isLeftHandTrackedV=true;
-					leftHandInSync=0;
+					leftHandOutOfSync=0;
 					foundHand = true;
 					printf("Found left hand!");
 					BYTE keys [3] = {VK_CONTROL,VK_SHIFT,GUIConnector::K};
@@ -235,6 +284,31 @@ bool Nite_HandTracker::isLeftHandTracked(void)
 	return isLeftHandTrackedV;
 }
 
+void Nite_HandTracker::initLeftHand(Point3f position){
+	nite::HandId newId;
+	handTracker.startHandTracking(position, &newId);
+
+
+
+	leftHandId = newId;
+	isLeftHandTrackedV=true;
+	leftHandOutOfSync=0;
+	printf("Found left hand!");
+	BYTE keys [3] = {VK_CONTROL,VK_SHIFT,GUIConnector::K};
+	GUIConnector::sendKeyboardInput(keys,3);
+	
+}
+
+void Nite_HandTracker::initRightHand(Point3f position){
+	nite::HandId newId;
+	handTracker.startHandTracking(position, &newId);
+	rightHandId = newId;
+	isRightHandTrackedV=true;
+	rightHandOutOfSync=0;
+	printf("Found right hand!");
+	BYTE keys [3] = {VK_CONTROL,VK_SHIFT,VK_F1};
+	GUIConnector::sendKeyboardInput(keys,3);
+}
 
 /*
 			const nite::Array<nite::GestureData>& gestures = handTrackerFrame.getGestures();
