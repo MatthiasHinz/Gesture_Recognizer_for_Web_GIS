@@ -1,6 +1,6 @@
 #include "Nite_HandTracker.h";
 #include "GUIConnector.h";
-#include "windows.h";
+
 
 Point3f leftHand;
 Point3f rightHand;
@@ -20,14 +20,18 @@ bool printInitMessageLeft = true;
 bool printInitMessageRight = true;
 
 //prevents a hand from getting "locked in"
-int lockedInCounter = 0;
-const int maxCount_lockedInCounter = 20;
+
+const int maxCount_lockedInCounter = 200;
+const int maxCount_outOfSyncCounter = 200;
 Point3f last_left_value;
 Point3f last_right_value;
 
+
+
 Nite_HandTracker::Nite_HandTracker(void)
 {
-
+	leftLockedInCounter = 0;
+	rightLockedInCounter = 0;
 }
 
 
@@ -39,28 +43,37 @@ Nite_HandTracker::~Nite_HandTracker(void)
 int Nite_HandTracker::initHandTracker(void)
 {
 	//Signal that there is no right hand tracked yet:
-	BYTE keys [3] = {VK_CONTROL,VK_SHIFT,VK_OEM_COMMA};
-	GUIConnector::sendKeyboardInput(keys, 3);
+//	BYTE keys [3] = {VK_CONTROL,VK_SHIFT,VK_OEM_COMMA};
+//	GUIConnector::sendKeyboardInput(keys, 3);
 	
 	//Signal that there is no left hand tracked yet:
-	BYTE keys2 [3] = {VK_CONTROL,VK_SHIFT,GUIConnector::L};
-	GUIConnector::sendKeyboardInput(keys2,3);
-
-	niteRc = nite::NiTE::initialize();
-	if (niteRc != nite::STATUS_OK)
-	{
+	//BYTE keys2 [3] = {VK_CONTROL,VK_SHIFT,GUIConnector::L};
+	//GUIConnector::sendKeyboardInput(keys2,3);
+	try{
+		niteRc = nite::NiTE::initialize();
+		if (niteRc != nite::STATUS_OK)
+		{
+			printf("NiTE initialization failed\n");
+			return 1;
+		}
+	}catch(int e){
 		printf("NiTE initialization failed\n");
-		return 1;
+		return e;
 	}
 	
-	niteRc = handTracker.create();
-	if (niteRc != nite::STATUS_OK)
-	{
-		printf("Couldn't create user tracker\n");
-		return 3;
+	try{
+		niteRc = handTracker.create();
+		if (niteRc != nite::STATUS_OK)
+		{
+			printf("Couldn't create user tracker\n");
+			return 3;
+		}
+	}catch(int e){
+		printf("Couldn't create user tracker, exception code %i\n",e);
+		return e;
 	}
 	
-	handTracker.setSmoothingFactor(0.2);
+	handTracker.setSmoothingFactor(0.3);
 	handTracker.startGestureDetection(nite::GESTURE_WAVE);
 	handTracker.startGestureDetection(nite::GESTURE_HAND_RAISE);
 	handTracker.startGestureDetection(nite::GESTURE_CLICK);
@@ -97,31 +110,51 @@ void Nite_HandTracker::updateHandTracker(void)
 			if(hand.getId() == rightHandId){
 				//test if hand got stuck
 				bool gotStuck = false;
-				if(lockedInCounter == maxCount_lockedInCounter){
-					if(getLeftHandCoordinates() == last_left_value){
+				if(rightLockedInCounter == maxCount_lockedInCounter){
 						gotStuck = true;
-					}else last_left_value = getLeftHandCoordinates();
+						printf("Your Right hand got stuck! \n");
+						rightLockedInCounter = 0;
+					}else{
+						if(getRightHandCoordinates().x == last_right_value.x &&
+							getRightHandCoordinates().y == last_right_value.y &&
+							getRightHandCoordinates().z == last_right_value.z
+							){
+								rightLockedInCounter++;
+						}else{
+							rightLockedInCounter=0;
+						}
+				} 
 				
-				} //no counting forward or setting 0 because this is done below with the counter
+				last_right_value = getRightHandCoordinates();
+				//no counting forward or setting 0 because this is done below with the counter
 
 				if(hand.isLost() || !hand.isTracking() || gotStuck){
-					printf("Your right hand may get lost!!!!\n");
+					printf("Your right hand may get lost!!!!!!!\n State: %s %s %s\n", hand.isLost() ? "isLost":"notLost", hand.isTracking() ? "isTracking":"notTracking", gotStuck ? "gotStuck": "notGotStuck");
 					isRightHandLost= true;
 				}	
 			}
 			if(hand.getId() == leftHandId){
 				//test if hand got stuck
 				bool gotStuck = false;
-				if(lockedInCounter == maxCount_lockedInCounter){
-					if(getRightHandCoordinates() == last_right_value){
+				bool outOfSync;
+				if(leftLockedInCounter == maxCount_lockedInCounter){
 						gotStuck = true;
-					}else last_right_value = getRightHandCoordinates();
-
-					lockedInCounter = 0;
-				} else lockedInCounter++;
+						printf("Your Left hand got stuck! \n");
+						leftLockedInCounter = 0;
+					}else{
+						if(getLeftHandCoordinates().x == last_left_value.x &&
+							getLeftHandCoordinates().y == last_left_value.y &&
+							getLeftHandCoordinates().z == last_left_value.z
+							){
+								leftLockedInCounter++;
+						}else{
+							leftLockedInCounter=0;
+						}
+				} 
+				last_left_value = getLeftHandCoordinates();
 
 				if(hand.isLost()|| !hand.isTracking() || gotStuck){
-					printf("Your left hand may get lost!!!!\n");
+					printf("Your left hand may get lost! State: %s %s %s\n", hand.isLost() ? "isLost":"notLost", hand.isTracking() ? "isTracking":"notTracking", gotStuck ? "gotStuck": "notGotStuck");
 					isLeftHandLost=true;
 				}
 			}
@@ -131,9 +164,14 @@ void Nite_HandTracker::updateHandTracker(void)
 				
 		}
 
-		if(isRightHandLost){ //&& rightHandOutOfSync>5){
+	if(isRightHandTrackedV && (isRightHandLost || rightHandOutOfSync > maxCount_outOfSyncCounter)){
 			handTracker.stopHandTracking(rightHandId);
-			printf("Lost track for right hand!\n");
+			if(isRightHandLost){
+				printf("Lost track for right hand!\n");
+			}else{
+				printf("Lost track for right hand because it is out of sync for too many iterations!\n");
+			}
+
 			isRightHandTrackedV = false;
 			printInitMessageRight = true;
 			rightHandOutOfSync=0;
@@ -143,9 +181,13 @@ void Nite_HandTracker::updateHandTracker(void)
 			GUIConnector::sendKeyboardInput(keys, 3);
 		}
 
-		if(isLeftHandLost){ //&& leftHandOutOfSync> 5){
+	if(isLeftHandTrackedV && (isLeftHandLost ||  leftHandOutOfSync > maxCount_outOfSyncCounter)){
 			handTracker.stopHandTracking(leftHandId);
-			printf("Lost track for left hand!\n");
+			if(isLeftHandLost){
+				printf("Lost track for left hand!\n");
+			}else{
+				printf("Lost track for left hand because it is out of sync for too many iterations!\n");
+			}
 			isLeftHandTrackedV = false;
 			printInitMessageLeft = true;
 			leftHandOutOfSync=0;
@@ -169,12 +211,17 @@ void Nite_HandTracker::updateHandTracker(void)
 		}
 
 	    //check whether readframe works
-		niteRc = handTracker.readFrame(&handTrackerFrame);
-		if (niteRc != nite::STATUS_OK)
-		{
-			printf("Get next frame failed\n");
+		try{
+			niteRc = handTracker.readFrame(&handTrackerFrame);
+			if (niteRc != nite::STATUS_OK){
+				printf("Get next frame failed\n");
+				return;
+			}
+		}catch(int e){
+			printf("Get next frame failed with an exception. Code: %i\n", e);
 			return;
 		}
+
 
 		for (int i = 0; i < gestures.getSize() ; ++i)
 		{

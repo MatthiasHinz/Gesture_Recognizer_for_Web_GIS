@@ -1,4 +1,6 @@
 #include <NiTE.h>
+#include "windows.h";
+#include <string.h>;
 using namespace nite;
 
 #pragma once
@@ -16,5 +18,7 @@ public:
 	bool isLeftHandTracked(void);
 	void initLeftHand(Point3f position);
 	void initRightHand(Point3f position);
+	int leftLockedInCounter;
+	int rightLockedInCounter;
 };
 

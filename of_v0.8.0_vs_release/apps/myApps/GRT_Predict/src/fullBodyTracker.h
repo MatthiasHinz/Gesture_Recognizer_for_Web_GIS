@@ -2,6 +2,7 @@
 
 #include <NiTE.h>
 using namespace nite;
+#include "GUIConnector.h"
 
 class FullBodyTracker
 {
