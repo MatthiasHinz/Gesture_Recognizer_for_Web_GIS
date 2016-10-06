@@ -1,4 +1,4 @@
-# Gesture Recognizer for a Web-GIS
+# Gesture Recognizer for Web-GIS
 
 This repository contains an OpenNI2-based gesture recognizer for Kinect [1], made for a multimodal browser-based GIS. It executes keyboard and mouse controls by hand- and body gestures. Amongst others, the software also makes use of the Gesture Recognition Toolkit (GRT) by Nik Gillian [2].
 
