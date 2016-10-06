@@ -16,4 +16,4 @@ More information about the recognizer is available on the wiki of this repositor
 [1] The source-code of the map - application is available at https://github.com/MarkusKonk/Geographic-Interaction. <br/>
 [2] Information about OpenNI is available at http://structure.io/openni.<br/>
 [3] Information about GRT is available at  http://www.nickgillian.com/wiki/pmwiki.php/GRT/GestureRecognitionToolkit.<br/>
-[4] The final project report is available at https://github.com/MatthiasHinz/Gesture_Recognizer_of0.8_Nite2_Openni2_x86/blob/master/Hinz_final%20report_IWGI_Feb2014.pdf?raw=true.
+[4] The final project report is available at https://github.com/MatthiasHinz/Gesture_Recognizer_for_Web_GIS/raw/master/Hinz_final%20report_IWGI_Feb2014.pdf?raw=true
